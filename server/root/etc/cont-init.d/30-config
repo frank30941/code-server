@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p /config/{extensions,data,workspace,.ssh}
+
+if [ -n "${SUDO_PASSWORD}" ]; then
+  echo "setting up sudo access"
+  if ! grep -q 'abc' /etc/sudoers; then
+    echo "adding abc to sudoers.d"
+    echo "abc ALL=(ALL:ALL) ALL" >> /etc/sudoers.d/abc
+  fi
+  echo "setting sudo password"
+  echo -e "${SUDO_PASSWORD}\n${SUDO_PASSWORD}" | passwd abc
+else
+  echo "abc ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/abc
+fi
+
+# permissions
+chown -R abc:abc \
+	/config

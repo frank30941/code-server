@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+    codeserver:
+        container_name: ${CODEUSER}_cs
+        image: frank30941/code-server
+        restart: unless-stopped
+        networks:
+            - netself
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - "v_cs:/config"
+        environment:
+            - PUID=${UID}
+            - PGID=${GID}
+#            - SUDO_PASSWORD=XXX
+            - DOCKER_MODS=linuxserver/mods:code-server-docker
+            - TZ=Asia/Taipei
+        labels:
+            - traefik.enable=true
+#            - "traefik.http.routers.domaintld-http.rule=Host(`${CODEDOMAINNAME}`)"
+#            - traefik.http.routers.domaintld-http.entrypoints=http
+            - "traefik.http.routers.domaintld-https.rule=Host(`${CODEDOMAINNAME}`)"
+            - traefik.http.routers.domaintld-https.entrypoints=https
+            - traefik.http.routers.domaintld-http.middlewares=domaintld-redirect
+            - traefik.http.middlewares.domaintld-redirect.redirectscheme.scheme=https
+            - "traefik.http.routers.domaintld-https.tls.certresolver=${CODEUSER}"
+volumes:
+    v_cs:
+        name: ${CODEUSER}_cs
+networks:
+    netself:
+        name: ${CODEUSER}
