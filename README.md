@@ -27,6 +27,8 @@ I used the DNS service of [NCTU](https://nctu.me/) which the platform provides a
 ``` sh
 CODEUSER=XXX
 CODEDOMAINNAME=XXX
+SUDO_PASSWORD=''
+PASSWORD=XXX
 ```
 
 ## Set uid & gid
