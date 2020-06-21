@@ -18,9 +18,9 @@ services:
             - TZ=Asia/Taipei
         labels:
             - traefik.enable=true
-            - "traefik.http.routers.domaintld-http.rule=Host(`${CODEDOMAINNAME}`)"
+            - "traefik.http.routers.domaintld-http.rule=${CODEDOMAINNAME}"
             - traefik.http.routers.domaintld-http.entrypoints=http
-            - "traefik.http.routers.domaintld-https.rule=Host(`${CODEDOMAINNAME}`)"
+            - "traefik.http.routers.domaintld-https.rule=${CODEDOMAINNAME}"
             - traefik.http.routers.domaintld-https.entrypoints=https
             - traefik.http.routers.domaintld-http.middlewares=domaintld-redirect
             - traefik.http.middlewares.domaintld-redirect.redirectscheme.scheme=https
