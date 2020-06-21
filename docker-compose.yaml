@@ -12,6 +12,7 @@ services:
         environment:
             - PUID=${UID}
             - PGID=${GID}
+            - CODEUSER=${CODEUSER}
             - SUDO_PASSWORD=${SUDO_PASSWORD}
             - PASSWORD=${PASSWORD}
             - DOCKER_MODS=linuxserver/mods:code-server-docker
