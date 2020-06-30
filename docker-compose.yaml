@@ -5,10 +5,10 @@ services:
         image: frank30941/code-server
         restart: unless-stopped
         networks:
-            - netself
+            - worknet
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
-            - "v_cs:/config"
+            - "workspace:/config"
         environment:
             - PUID=${UID}
             - PGID=${GID}
@@ -19,16 +19,19 @@ services:
             - TZ=Asia/Taipei
         labels:
             - traefik.enable=true
-            - "traefik.http.routers.domaintld-http.rule=${CODEDOMAINNAME}"
-            - traefik.http.routers.domaintld-http.entrypoints=http
-            - "traefik.http.routers.domaintld-https.rule=${CODEDOMAINNAME}"
-            - traefik.http.routers.domaintld-https.entrypoints=https
-            - traefik.http.routers.domaintld-http.middlewares=domaintld-redirect
-            - traefik.http.middlewares.domaintld-redirect.redirectscheme.scheme=https
-            - "traefik.http.routers.domaintld-https.tls.certresolver=${CODEUSER}"
+            - "traefik.http.routers.codeserver-http.rule=${CODEDOMAINNAME}"
+            - traefik.http.routers.codeserver-http.entrypoints=http
+            - "traefik.http.routers.codeserver-https.rule=${CODEDOMAINNAME}"
+            - traefik.http.routers.codeserver-https.entrypoints=https
+            - traefik.http.routers.codeserver-http.middlewares=codeserver-redirect
+            - traefik.http.middlewares.codeserver-redirect.redirectscheme.scheme=https
+            - "traefik.http.routers.codeserver-https.tls.certresolver=${CODEUSER}"
+            - "traefik.http.services.codeserver-https.loadbalancer.server.port=8080"
 volumes:
-    v_cs:
-        name: ${CODEUSER}_cs
+    workspace:
+        external: true
+        name: workspace
 networks:
-    netself:
-        name: ${CODEUSER}
+    worknet:
+        internal: true
+        name: worknet
