@@ -5,6 +5,7 @@ services:
         image: frank30941/code-server
         restart: unless-stopped
         networks:
+            - proxy
             - worknet
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -17,21 +18,25 @@ services:
             - PASSWORD=${PASSWORD}
             - DOCKER_MODS=linuxserver/mods:code-server-docker
             - TZ=Asia/Taipei
-        labels:
-            - traefik.enable=true
-            - "traefik.http.routers.codeserver-http.rule=${CODEDOMAINNAME}"
-            - traefik.http.routers.codeserver-http.entrypoints=http
-            - "traefik.http.routers.codeserver-https.rule=${CODEDOMAINNAME}"
-            - traefik.http.routers.codeserver-https.entrypoints=https
-            - traefik.http.routers.codeserver-http.middlewares=codeserver-redirect
-            - traefik.http.middlewares.codeserver-redirect.redirectscheme.scheme=https
-            - "traefik.http.routers.codeserver-https.tls.certresolver=${CODEUSER}"
-            - "traefik.http.services.codeserver-https.loadbalancer.server.port=8080"
+        deploy:
+            labels:
+                - traefik.enable=true
+                - "traefik.http.routers.codeserver-http.rule=${CODEDOMAINNAME}"
+                - traefik.http.routers.codeserver-http.entrypoints=http
+                - "traefik.http.routers.codeserver-https.rule=${CODEDOMAINNAME}"
+                - traefik.http.routers.codeserver-https.entrypoints=https
+                - traefik.http.routers.codeserver-http.middlewares=codeserver-redirect
+                - traefik.http.middlewares.codeserver-redirect.redirectscheme.scheme=https
+                - "traefik.http.routers.codeserver-https.tls.certresolver=${CODEUSER}"
+                - "traefik.http.services.codeserver-service.loadbalancer.server.port=8080"
 volumes:
     workspace:
         external: true
         name: workspace
 networks:
+    proxy:
+        external: true
+        name: proxy
     worknet:
-        internal: true
+        external: true
         name: worknet
