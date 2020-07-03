@@ -1,5 +1,13 @@
 #!/usr/bin/with-contenv bash
 
+HUGO_RELEASE=$(curl -sX GET "https://api.github.com/repos/gohugoio/hugo/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]') && \
+HUGO_VERSION=$(echo "${HUGO_RELEASE}" | awk '{print substr($1,2); }') && \
+mkdir -p /usr/local/src && \
+cd /usr/local/src && \
+curl -L "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-64bit.tar.gz" | tar -xz && \
+mv hugo /usr/local/bin/hugo && \
+chown root:abc /usr/local/bin/hugo;
+
 if [ -n "${PASSWORD}" ]; then
   AUTH="password"
 else
