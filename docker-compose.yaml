@@ -2,7 +2,7 @@ version: '3.7'
 services:
     codeserver:
         container_name: ${CODEUSER}_cs
-        image: frank30941/code-server
+        image: frank30941/code-server:latest
         restart: unless-stopped
         networks:
             - proxy
